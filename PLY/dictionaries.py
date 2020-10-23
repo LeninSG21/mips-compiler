@@ -76,3 +76,34 @@ opcodes = {
     'xor':'000000',
     'xori': '001110'
 }
+
+registerAdress = {
+    "at": '00001',
+    'gp': '11100',
+    'sp': '11101',
+    'fp': '11110',
+    'ra': '11111',
+    'v0': '00010',
+    'v1': '00011',
+    'k0': '11010',
+    'k1': '11011',
+    't8': '11000',
+    't9': '11001'
+}
+
+def num2bin(num, size):
+    return bin(num)[2:].zfill(size)
+
+def getRegisterAddress(reg):
+    if(reg == '0'):
+        return '00000'
+    elif (reg in registerAdress.keys()):
+        return registerAdress[reg]
+    
+    num = int(reg[1])
+    if(reg[0] == 'a'):
+        return num2bin(num+4, 5)
+    elif(reg[0] == 't'):
+        return num2bin(num+8, 5)
+    elif(reg[0] == 's'):
+        return num2bin(num+16, 5)
