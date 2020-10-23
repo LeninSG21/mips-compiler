@@ -93,13 +93,16 @@ registerAdress = {
 
 def num2bin_signed(num, size):
     if(num>=0):
-        return bin(num)[2:].zfill(size)
+        binStr = bin(num)[2:].zfill(size)
+        return binStr[len(binStr) - size:]
     else:
         x = 2**(size-1) + num
+        binStr = bin(x)[2:].zfill(size-1)
         return "1" + bin(x)[2:].zfill(size-1)
 
 def num2bin(num, size):
-    return bin(num)[2:].zfill(size)
+    binStr = bin(num)[2:].zfill(size)
+    return binStr[len(binStr) - size:]
 
 def getRegisterAddress(reg):
     if(reg == '0'):
