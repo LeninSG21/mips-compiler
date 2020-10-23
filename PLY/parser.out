@@ -3,7 +3,6 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     I
-    IMM
     J
     LABEL
     MNEMONIC
@@ -18,12 +17,15 @@ Rule 1     exp -> exp exp
 Rule 2     exp -> inst
 Rule 3     exp -> LABELDEF inst
 Rule 4     inst -> R REG COMA REG COMA REG
+Rule 5     inst -> R REG COMA REG
+Rule 6     inst -> R REG
+Rule 7     inst -> R REG COMA REG COMA IMM
 
 Terminals, with rules where they appear
 
-COMA                 : 4 4
+COMA                 : 4 4 5 7 7
 I                    : 
-IMM                  : 
+IMM                  : 7
 J                    : 
 LABEL                : 
 LABELDEF             : 3
@@ -31,8 +33,8 @@ MNEMONIC             :
 NUMBER               : 
 O                    : 
 OFFSET               : 
-R                    : 4
-REG                  : 4 4 4
+R                    : 4 5 6 7
+REG                  : 4 4 4 5 5 6 7 7
 error                : 
 
 Nonterminals, with rules where they appear
@@ -49,6 +51,9 @@ state 0
     (2) exp -> . inst
     (3) exp -> . LABELDEF inst
     (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
 
     LABELDEF        shift and go to state 3
     R               shift and go to state 4
@@ -64,6 +69,9 @@ state 1
     (2) exp -> . inst
     (3) exp -> . LABELDEF inst
     (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
 
     LABELDEF        shift and go to state 3
     R               shift and go to state 4
@@ -84,6 +92,9 @@ state 3
 
     (3) exp -> LABELDEF . inst
     (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
 
     R               shift and go to state 4
 
@@ -92,6 +103,9 @@ state 3
 state 4
 
     (4) inst -> R . REG COMA REG COMA REG
+    (5) inst -> R . REG COMA REG
+    (6) inst -> R . REG
+    (7) inst -> R . REG COMA REG COMA IMM
 
     REG             shift and go to state 7
 
@@ -104,6 +118,9 @@ state 5
     (2) exp -> . inst
     (3) exp -> . LABELDEF inst
     (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
 
   ! shift/reduce conflict for LABELDEF resolved as shift
   ! shift/reduce conflict for R resolved as shift
@@ -129,13 +146,21 @@ state 6
 state 7
 
     (4) inst -> R REG . COMA REG COMA REG
+    (5) inst -> R REG . COMA REG
+    (6) inst -> R REG .
+    (7) inst -> R REG . COMA REG COMA IMM
 
     COMA            shift and go to state 8
+    LABELDEF        reduce using rule 6 (inst -> R REG .)
+    R               reduce using rule 6 (inst -> R REG .)
+    $end            reduce using rule 6 (inst -> R REG .)
 
 
 state 8
 
     (4) inst -> R REG COMA . REG COMA REG
+    (5) inst -> R REG COMA . REG
+    (7) inst -> R REG COMA . REG COMA IMM
 
     REG             shift and go to state 9
 
@@ -143,15 +168,22 @@ state 8
 state 9
 
     (4) inst -> R REG COMA REG . COMA REG
+    (5) inst -> R REG COMA REG .
+    (7) inst -> R REG COMA REG . COMA IMM
 
     COMA            shift and go to state 10
+    LABELDEF        reduce using rule 5 (inst -> R REG COMA REG .)
+    R               reduce using rule 5 (inst -> R REG COMA REG .)
+    $end            reduce using rule 5 (inst -> R REG COMA REG .)
 
 
 state 10
 
     (4) inst -> R REG COMA REG COMA . REG
+    (7) inst -> R REG COMA REG COMA . IMM
 
     REG             shift and go to state 11
+    IMM             shift and go to state 12
 
 
 state 11
@@ -161,6 +193,15 @@ state 11
     LABELDEF        reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
     R               reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
     $end            reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
+
+
+state 12
+
+    (7) inst -> R REG COMA REG COMA IMM .
+
+    LABELDEF        reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
+    R               reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
+    $end            reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
 
 WARNING: 
 WARNING: Conflicts:

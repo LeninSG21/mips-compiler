@@ -3,14 +3,6 @@ import ply.lex as lex
 import ply.yacc as yacc
 from dictionaries import *
 
-def twos_comp(num, size):
-    if(num>=0):
-        return bin(num)[2:].zfill(size)
-    else:
-        x = 2**(size-1) + num
-        return "1" + bin(x)[2:].zfill(size-1)
-
-
 
 tokens = ('IMM', 'REG', 'OFFSET', 'LABELDEF', 'LABEL', 'NUMBER', 'MNEMONIC', 'R', 'J','I', 'O', 'COMA')
 
@@ -68,7 +60,17 @@ def t_error(t):
 
 t_ignore = r'( |\t)+'
 
-texto = "add $s4, $s4, $s1"
+texto = '''add $s2, $s0, $s1
+addu $t2, $t0, $t1
+div $s0, $t0
+jr $s7
+mfhi $s7
+mflo $t7
+multu $s0, $0
+sll $s7, $t0, 10
+sllv $s0, $s1, $s2
+sra $t9, $t8, 31
+'''
 
 lexer = lex.lex()
 lexer.input(texto)
@@ -95,7 +97,10 @@ def p_exp_label(p):
 
 def p_R1(p):
     'inst : R REG COMA REG COMA REG'
-    p[0] = "%s%s%s%s00000%s" % (opcodes[p[1]], p[4], p[6], p[2],func[p[1]])
+    if(p[1] == 'sllv' or p[1] == 'srlv'):
+        p[0] = "%s%s%s%s00000%s" % (opcodes[p[1]], p[6], p[4], p[2],func[p[1]])
+    else:
+        p[0] = "%s%s%s%s00000%s" % (opcodes[p[1]], p[4], p[6], p[2],func[p[1]])
 
 def p_R2(p):
     'inst : R REG COMA REG'
@@ -103,7 +108,15 @@ def p_R2(p):
 
 def p_R3(p):
     'inst : R REG'
-    p[0] = 
+    if(p[1] == 'jr'):
+        p[0] = "%s%s000000000000000%s" % (opcodes[p[1]], p[2], func[p[1]])
+    elif(p[1] == 'mfhi' or p[1] == 'mflo'):
+        p[0] = "%s0000000000%s00000%s" %(opcodes[p[1]], p[2], func[p[1]])
+
+def p_Rshift(p):
+    'inst : R REG COMA REG COMA IMM'
+    p[0] = "%s00000%s%s%s%s" %(opcodes[p[1]], p[4], p[2], num2bin(abs(p[6]), 5), func[p[1]])
+
 
 parser = yacc.yacc()
 

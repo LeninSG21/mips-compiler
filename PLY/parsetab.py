@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'COMA I IMM J LABEL LABELDEF MNEMONIC NUMBER O OFFSET R REGexp : exp expexp : inst exp : LABELDEF inst inst : R REG COMA REG COMA REG'
+_lr_signature = 'COMA I IMM J LABEL LABELDEF MNEMONIC NUMBER O OFFSET R REGexp : exp expexp : inst exp : LABELDEF inst inst : R REG COMA REG COMA REGinst : R REG COMA REGinst : R REGinst : R REG COMA REG COMA IMM'
     
-_lr_action_items = {'LABELDEF':([0,1,2,5,6,11,],[3,3,-2,3,-3,-4,]),'R':([0,1,2,3,5,6,11,],[4,4,-2,4,4,-3,-4,]),'$end':([1,2,5,6,11,],[0,-2,-1,-3,-4,]),'REG':([4,8,10,],[7,9,11,]),'COMA':([7,9,],[8,10,]),}
+_lr_action_items = {'LABELDEF':([0,1,2,5,6,7,9,11,12,],[3,3,-2,3,-3,-6,-5,-4,-7,]),'R':([0,1,2,3,5,6,7,9,11,12,],[4,4,-2,4,4,-3,-6,-5,-4,-7,]),'$end':([1,2,5,6,7,9,11,12,],[0,-2,-1,-3,-6,-5,-4,-7,]),'REG':([4,8,10,],[7,9,11,]),'COMA':([7,9,],[8,10,]),'IMM':([10,],[12,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -27,8 +27,11 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> exp","S'",1,None,None,None),
-  ('exp -> exp exp','exp',2,'p_exp_exp','mipsCompiler.py',85),
-  ('exp -> inst','exp',1,'p_exp','mipsCompiler.py',89),
-  ('exp -> LABELDEF inst','exp',2,'p_exp_label','mipsCompiler.py',93),
-  ('inst -> R REG COMA REG COMA REG','inst',6,'p_R1','mipsCompiler.py',97),
+  ('exp -> exp exp','exp',2,'p_exp_exp','mipsCompiler.py',87),
+  ('exp -> inst','exp',1,'p_exp','mipsCompiler.py',91),
+  ('exp -> LABELDEF inst','exp',2,'p_exp_label','mipsCompiler.py',95),
+  ('inst -> R REG COMA REG COMA REG','inst',6,'p_R1','mipsCompiler.py',99),
+  ('inst -> R REG COMA REG','inst',4,'p_R2','mipsCompiler.py',103),
+  ('inst -> R REG','inst',2,'p_R3','mipsCompiler.py',107),
+  ('inst -> R REG COMA REG COMA IMM','inst',6,'p_Rshift','mipsCompiler.py',114),
 ]
