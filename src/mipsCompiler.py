@@ -4,11 +4,9 @@ import ply.yacc as yacc
 from dictionaries import *
 
 
-tokens = ('IMM', 'REG', 'OFFSET', 'LABELDEF', 'LABEL', 'NUMBER', 'MNEMONIC', 'R', 'J','I', 'O', 'COMA' , 'PA', 'PC')
+tokens = ('IMM', 'REG', 'LABELDEF', 'LABEL', 'R', 'J','I', 'O', 'COMA')
 
 t_COMA = r','
-t_PA = r'\('
-t_PC = r'\)'
 
 labels_def = {}
 
@@ -61,18 +59,8 @@ def t_error(t):
 
 t_ignore = r'( |\t)+'
 
-texto = '''for:slt $t0, $s2, $s7 #t0 = i < 4
-add $s3, $s3, $s0 #a = a + n
-sub $s3, $s3, $s2 #a = a - i
-beq $0, $0, for
-add $s4, $s4, $s1 #b = b + m
-add $s4, $s4, $s2 #b = b + i
-
-
-
-
-beq $0, $t0, end # if i>=4, jump to end
-end: sub $s5, $s3, $s4 #c = a - b
+texto = '''
+noop
 '''
 
 lexer = lex.lex()
@@ -80,11 +68,11 @@ lexer.input(texto)
 
 while True:
     tok = lexer.token()
-    print(tok)
+    # print(tok)
     if not tok:
         break
 
-print(labels_def)
+# print(labels_def)
 
 inst_count = 1
 
@@ -150,27 +138,59 @@ def p_I2(p):
         p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], branches[p[1]], num2bin_signed(p[4], 16))
 
 def p_I3(p):
-    'inst : I REG COMA IMM PA REG PC'
+    'inst : I REG COMA IMM  REG '
     global inst_count
     inst_count += 1
-    p[0] = "%s%s%s%s" % (opcodes[p[1]], p[6], p[2], num2bin(p[4], 16))
+    p[0] = "%s%s%s%s" % (opcodes[p[1]], p[5], p[2], num2bin(p[4], 16))
 
 def p_I1Label(p):
     'inst : I REG COMA REG COMA LABEL'
     global inst_count
-    
-    print(p[6], '--> ',inst_count)
-    if p[1] == 'beq' or p[0] == 'bne':
-        p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], p[4], num2bin_signed(0, 16))
+
+    if p[6] in labels_def.keys():
+        labelDefLine = labels_def[p[6]]
+        if labelDefLine > inst_count:
+            offset = num2bin(labelDefLine - inst_count - 1, 16)
+        else:
+            offset = num2bin_signed(labelDefLine - 1 - inst_count, 16)
+        if p[1] == 'beq' or p[0] == 'bne':
+            p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], p[4], offset)
+        else:
+            p[0] = "%s no puede tener %s como entrada" % (p[1], p[6])
+    else: 
+        print("No existe el label!")
+        p[0] = "LABEL NO DEFINIDO"
     
     inst_count += 1
     
 
-# def p_I2Label(p):
-#     'inst : I REG COMA LABEL'
-#     if p[1] !='lui':
-#         p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], branches[p[1]], num2bin_signed(p[4], 16))
+def p_I2Label(p):
+    'inst : I REG COMA LABEL'
+    global inst_count
+    
+    if p[4] in labels_def.keys():
+        labelDefLine = labels_def[p[4]]
+        if labelDefLine > inst_count:
+            offset = num2bin(labelDefLine - inst_count - 1, 16)
+        else:
+            offset = num2bin_signed(labelDefLine - 1 - inst_count, 16)
+        if p[1] !='lui':
+            p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], branches[p[1]], offset)
+        else:
+            p[0] = "%s no puede tener %s como entrada" % (p[1], p[6])
+    else: 
+        print("No existe el label!")
+        p[0] = "LABEL NO DEFINIDO"
+    
+    inst_count += 1
 
+def p_J(p):
+    'inst : J IMM'
+    p[0] = "%s%s" % (opcodes[p[1]], num2bin_signed(p[2], 26))
+
+def p_O(p):
+    'inst : O '
+    p[0] = others[p[1]]
 
 parser = yacc.yacc()
 

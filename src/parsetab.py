@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'COMA I IMM J LABEL LABELDEF MNEMONIC NUMBER O OFFSET PA PC R REGexp : exp expexp : inst exp : LABELDEF inst inst : R REG COMA REG COMA REGinst : R REG COMA REGinst : R REGinst : R REG COMA REG COMA IMMinst : I REG COMA REG COMA IMMinst : I REG COMA IMMinst : I REG COMA IMM PA REG PCinst : I REG COMA REG COMA LABEL'
+_lr_signature = 'COMA I IMM J LABEL LABELDEF O R REGexp : exp expexp : inst exp : LABELDEF inst inst : R REG COMA REG COMA REGinst : R REG COMA REGinst : R REGinst : R REG COMA REG COMA IMMinst : I REG COMA REG COMA IMMinst : I REG COMA IMMinst : I REG COMA IMM  REG inst : I REG COMA REG COMA LABELinst : I REG COMA LABELinst : J IMMinst : O '
     
-_lr_action_items = {'LABELDEF':([0,1,2,6,7,8,12,14,18,19,20,21,23,],[3,3,-2,3,-3,-6,-5,-9,-4,-7,-8,-11,-10,]),'R':([0,1,2,3,6,7,8,12,14,18,19,20,21,23,],[4,4,-2,4,4,-3,-6,-5,-9,-4,-7,-8,-11,-10,]),'I':([0,1,2,3,6,7,8,12,14,18,19,20,21,23,],[5,5,-2,5,5,-3,-6,-5,-9,-4,-7,-8,-11,-10,]),'$end':([1,2,6,7,8,12,14,18,19,20,21,23,],[0,-2,-1,-3,-6,-5,-9,-4,-7,-8,-11,-10,]),'REG':([4,5,10,11,15,17,],[8,9,12,13,18,22,]),'COMA':([8,9,12,13,],[10,11,15,16,]),'IMM':([11,15,16,],[14,19,20,]),'PA':([14,],[17,]),'LABEL':([16,],[21,]),'PC':([22,],[23,]),}
+_lr_action_items = {'LABELDEF':([0,1,2,7,8,9,10,12,15,17,18,21,22,23,24,25,],[3,3,-2,-14,3,-3,-6,-13,-5,-9,-12,-10,-4,-7,-8,-11,]),'R':([0,1,2,3,7,8,9,10,12,15,17,18,21,22,23,24,25,],[4,4,-2,4,-14,4,-3,-6,-13,-5,-9,-12,-10,-4,-7,-8,-11,]),'I':([0,1,2,3,7,8,9,10,12,15,17,18,21,22,23,24,25,],[5,5,-2,5,-14,5,-3,-6,-13,-5,-9,-12,-10,-4,-7,-8,-11,]),'J':([0,1,2,3,7,8,9,10,12,15,17,18,21,22,23,24,25,],[6,6,-2,6,-14,6,-3,-6,-13,-5,-9,-12,-10,-4,-7,-8,-11,]),'O':([0,1,2,3,7,8,9,10,12,15,17,18,21,22,23,24,25,],[7,7,-2,7,-14,7,-3,-6,-13,-5,-9,-12,-10,-4,-7,-8,-11,]),'$end':([1,2,7,8,9,10,12,15,17,18,21,22,23,24,25,],[0,-2,-14,-1,-3,-6,-13,-5,-9,-12,-10,-4,-7,-8,-11,]),'REG':([4,5,13,14,17,19,],[10,11,15,16,21,22,]),'IMM':([6,14,19,20,],[12,17,23,24,]),'COMA':([10,11,15,16,],[13,14,19,20,]),'LABEL':([14,20,],[18,25,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'exp':([0,1,6,],[1,6,6,]),'inst':([0,1,3,6,],[2,2,7,2,]),}
+_lr_goto_items = {'exp':([0,1,8,],[1,8,8,]),'inst':([0,1,3,8,],[2,2,9,2,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,15 +27,18 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> exp","S'",1,None,None,None),
-  ('exp -> exp exp','exp',2,'p_exp_exp','mipsCompiler.py',81),
-  ('exp -> inst','exp',1,'p_exp','mipsCompiler.py',85),
-  ('exp -> LABELDEF inst','exp',2,'p_exp_label','mipsCompiler.py',89),
-  ('inst -> R REG COMA REG COMA REG','inst',6,'p_R1','mipsCompiler.py',93),
-  ('inst -> R REG COMA REG','inst',4,'p_R2','mipsCompiler.py',100),
-  ('inst -> R REG','inst',2,'p_R3','mipsCompiler.py',104),
-  ('inst -> R REG COMA REG COMA IMM','inst',6,'p_Rshift','mipsCompiler.py',111),
-  ('inst -> I REG COMA REG COMA IMM','inst',6,'p_I1','mipsCompiler.py',116),
-  ('inst -> I REG COMA IMM','inst',4,'p_I2','mipsCompiler.py',123),
-  ('inst -> I REG COMA IMM PA REG PC','inst',7,'p_I3','mipsCompiler.py',130),
-  ('inst -> I REG COMA REG COMA LABEL','inst',6,'p_I1Label','mipsCompiler.py',134),
+  ('exp -> exp exp','exp',2,'p_exp_exp','mipsCompiler.py',80),
+  ('exp -> inst','exp',1,'p_exp','mipsCompiler.py',84),
+  ('exp -> LABELDEF inst','exp',2,'p_exp_label','mipsCompiler.py',88),
+  ('inst -> R REG COMA REG COMA REG','inst',6,'p_R1','mipsCompiler.py',92),
+  ('inst -> R REG COMA REG','inst',4,'p_R2','mipsCompiler.py',101),
+  ('inst -> R REG','inst',2,'p_R3','mipsCompiler.py',107),
+  ('inst -> R REG COMA REG COMA IMM','inst',6,'p_Rshift','mipsCompiler.py',116),
+  ('inst -> I REG COMA REG COMA IMM','inst',6,'p_I1','mipsCompiler.py',123),
+  ('inst -> I REG COMA IMM','inst',4,'p_I2','mipsCompiler.py',132),
+  ('inst -> I REG COMA IMM REG','inst',5,'p_I3','mipsCompiler.py',141),
+  ('inst -> I REG COMA REG COMA LABEL','inst',6,'p_I1Label','mipsCompiler.py',147),
+  ('inst -> I REG COMA LABEL','inst',4,'p_I2Label','mipsCompiler.py',168),
+  ('inst -> J IMM','inst',2,'p_J','mipsCompiler.py',188),
+  ('inst -> O','inst',1,'p_O','mipsCompiler.py',192),
 ]
