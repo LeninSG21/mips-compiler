@@ -91,6 +91,15 @@ registerAdress = {
     't9': '11001'
 }
 
+branches = {
+    'bgez': '00001',
+    'bgezal':'10001',
+    'bgtz':'00000',
+    'blez':'00000',
+    'bltz': '00000',
+    'bltzal':'10000',
+}
+
 def num2bin_signed(num, size):
     if(num>=0):
         binStr = bin(num)[2:].zfill(size)

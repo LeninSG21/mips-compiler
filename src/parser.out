@@ -1,0 +1,347 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    J
+    MNEMONIC
+    NUMBER
+    O
+    OFFSET
+
+Grammar
+
+Rule 0     S' -> exp
+Rule 1     exp -> exp exp
+Rule 2     exp -> inst
+Rule 3     exp -> LABELDEF inst
+Rule 4     inst -> R REG COMA REG COMA REG
+Rule 5     inst -> R REG COMA REG
+Rule 6     inst -> R REG
+Rule 7     inst -> R REG COMA REG COMA IMM
+Rule 8     inst -> I REG COMA REG COMA IMM
+Rule 9     inst -> I REG COMA IMM
+Rule 10    inst -> I REG COMA IMM PA REG PC
+Rule 11    inst -> I REG COMA REG COMA LABEL
+
+Terminals, with rules where they appear
+
+COMA                 : 4 4 5 7 7 8 8 9 10 11 11
+I                    : 8 9 10 11
+IMM                  : 7 8 9 10
+J                    : 
+LABEL                : 11
+LABELDEF             : 3
+MNEMONIC             : 
+NUMBER               : 
+O                    : 
+OFFSET               : 
+PA                   : 10
+PC                   : 10
+R                    : 4 5 6 7
+REG                  : 4 4 4 5 5 6 7 7 8 8 9 10 10 11 11
+error                : 
+
+Nonterminals, with rules where they appear
+
+exp                  : 1 1 0
+inst                 : 2 3
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . exp
+    (1) exp -> . exp exp
+    (2) exp -> . inst
+    (3) exp -> . LABELDEF inst
+    (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
+    (8) inst -> . I REG COMA REG COMA IMM
+    (9) inst -> . I REG COMA IMM
+    (10) inst -> . I REG COMA IMM PA REG PC
+    (11) inst -> . I REG COMA REG COMA LABEL
+
+    LABELDEF        shift and go to state 3
+    R               shift and go to state 4
+    I               shift and go to state 5
+
+    exp                            shift and go to state 1
+    inst                           shift and go to state 2
+
+state 1
+
+    (0) S' -> exp .
+    (1) exp -> exp . exp
+    (1) exp -> . exp exp
+    (2) exp -> . inst
+    (3) exp -> . LABELDEF inst
+    (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
+    (8) inst -> . I REG COMA REG COMA IMM
+    (9) inst -> . I REG COMA IMM
+    (10) inst -> . I REG COMA IMM PA REG PC
+    (11) inst -> . I REG COMA REG COMA LABEL
+
+    LABELDEF        shift and go to state 3
+    R               shift and go to state 4
+    I               shift and go to state 5
+
+    exp                            shift and go to state 6
+    inst                           shift and go to state 2
+
+state 2
+
+    (2) exp -> inst .
+
+    LABELDEF        reduce using rule 2 (exp -> inst .)
+    R               reduce using rule 2 (exp -> inst .)
+    I               reduce using rule 2 (exp -> inst .)
+    $end            reduce using rule 2 (exp -> inst .)
+
+
+state 3
+
+    (3) exp -> LABELDEF . inst
+    (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
+    (8) inst -> . I REG COMA REG COMA IMM
+    (9) inst -> . I REG COMA IMM
+    (10) inst -> . I REG COMA IMM PA REG PC
+    (11) inst -> . I REG COMA REG COMA LABEL
+
+    R               shift and go to state 4
+    I               shift and go to state 5
+
+    inst                           shift and go to state 7
+
+state 4
+
+    (4) inst -> R . REG COMA REG COMA REG
+    (5) inst -> R . REG COMA REG
+    (6) inst -> R . REG
+    (7) inst -> R . REG COMA REG COMA IMM
+
+    REG             shift and go to state 8
+
+
+state 5
+
+    (8) inst -> I . REG COMA REG COMA IMM
+    (9) inst -> I . REG COMA IMM
+    (10) inst -> I . REG COMA IMM PA REG PC
+    (11) inst -> I . REG COMA REG COMA LABEL
+
+    REG             shift and go to state 9
+
+
+state 6
+
+    (1) exp -> exp exp .
+    (1) exp -> exp . exp
+    (1) exp -> . exp exp
+    (2) exp -> . inst
+    (3) exp -> . LABELDEF inst
+    (4) inst -> . R REG COMA REG COMA REG
+    (5) inst -> . R REG COMA REG
+    (6) inst -> . R REG
+    (7) inst -> . R REG COMA REG COMA IMM
+    (8) inst -> . I REG COMA REG COMA IMM
+    (9) inst -> . I REG COMA IMM
+    (10) inst -> . I REG COMA IMM PA REG PC
+    (11) inst -> . I REG COMA REG COMA LABEL
+
+  ! shift/reduce conflict for LABELDEF resolved as shift
+  ! shift/reduce conflict for R resolved as shift
+  ! shift/reduce conflict for I resolved as shift
+    $end            reduce using rule 1 (exp -> exp exp .)
+    LABELDEF        shift and go to state 3
+    R               shift and go to state 4
+    I               shift and go to state 5
+
+  ! LABELDEF        [ reduce using rule 1 (exp -> exp exp .) ]
+  ! R               [ reduce using rule 1 (exp -> exp exp .) ]
+  ! I               [ reduce using rule 1 (exp -> exp exp .) ]
+
+    exp                            shift and go to state 6
+    inst                           shift and go to state 2
+
+state 7
+
+    (3) exp -> LABELDEF inst .
+
+    LABELDEF        reduce using rule 3 (exp -> LABELDEF inst .)
+    R               reduce using rule 3 (exp -> LABELDEF inst .)
+    I               reduce using rule 3 (exp -> LABELDEF inst .)
+    $end            reduce using rule 3 (exp -> LABELDEF inst .)
+
+
+state 8
+
+    (4) inst -> R REG . COMA REG COMA REG
+    (5) inst -> R REG . COMA REG
+    (6) inst -> R REG .
+    (7) inst -> R REG . COMA REG COMA IMM
+
+    COMA            shift and go to state 10
+    LABELDEF        reduce using rule 6 (inst -> R REG .)
+    R               reduce using rule 6 (inst -> R REG .)
+    I               reduce using rule 6 (inst -> R REG .)
+    $end            reduce using rule 6 (inst -> R REG .)
+
+
+state 9
+
+    (8) inst -> I REG . COMA REG COMA IMM
+    (9) inst -> I REG . COMA IMM
+    (10) inst -> I REG . COMA IMM PA REG PC
+    (11) inst -> I REG . COMA REG COMA LABEL
+
+    COMA            shift and go to state 11
+
+
+state 10
+
+    (4) inst -> R REG COMA . REG COMA REG
+    (5) inst -> R REG COMA . REG
+    (7) inst -> R REG COMA . REG COMA IMM
+
+    REG             shift and go to state 12
+
+
+state 11
+
+    (8) inst -> I REG COMA . REG COMA IMM
+    (9) inst -> I REG COMA . IMM
+    (10) inst -> I REG COMA . IMM PA REG PC
+    (11) inst -> I REG COMA . REG COMA LABEL
+
+    REG             shift and go to state 13
+    IMM             shift and go to state 14
+
+
+state 12
+
+    (4) inst -> R REG COMA REG . COMA REG
+    (5) inst -> R REG COMA REG .
+    (7) inst -> R REG COMA REG . COMA IMM
+
+    COMA            shift and go to state 15
+    LABELDEF        reduce using rule 5 (inst -> R REG COMA REG .)
+    R               reduce using rule 5 (inst -> R REG COMA REG .)
+    I               reduce using rule 5 (inst -> R REG COMA REG .)
+    $end            reduce using rule 5 (inst -> R REG COMA REG .)
+
+
+state 13
+
+    (8) inst -> I REG COMA REG . COMA IMM
+    (11) inst -> I REG COMA REG . COMA LABEL
+
+    COMA            shift and go to state 16
+
+
+state 14
+
+    (9) inst -> I REG COMA IMM .
+    (10) inst -> I REG COMA IMM . PA REG PC
+
+    LABELDEF        reduce using rule 9 (inst -> I REG COMA IMM .)
+    R               reduce using rule 9 (inst -> I REG COMA IMM .)
+    I               reduce using rule 9 (inst -> I REG COMA IMM .)
+    $end            reduce using rule 9 (inst -> I REG COMA IMM .)
+    PA              shift and go to state 17
+
+
+state 15
+
+    (4) inst -> R REG COMA REG COMA . REG
+    (7) inst -> R REG COMA REG COMA . IMM
+
+    REG             shift and go to state 18
+    IMM             shift and go to state 19
+
+
+state 16
+
+    (8) inst -> I REG COMA REG COMA . IMM
+    (11) inst -> I REG COMA REG COMA . LABEL
+
+    IMM             shift and go to state 20
+    LABEL           shift and go to state 21
+
+
+state 17
+
+    (10) inst -> I REG COMA IMM PA . REG PC
+
+    REG             shift and go to state 22
+
+
+state 18
+
+    (4) inst -> R REG COMA REG COMA REG .
+
+    LABELDEF        reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
+    R               reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
+    I               reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
+    $end            reduce using rule 4 (inst -> R REG COMA REG COMA REG .)
+
+
+state 19
+
+    (7) inst -> R REG COMA REG COMA IMM .
+
+    LABELDEF        reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
+    R               reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
+    I               reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
+    $end            reduce using rule 7 (inst -> R REG COMA REG COMA IMM .)
+
+
+state 20
+
+    (8) inst -> I REG COMA REG COMA IMM .
+
+    LABELDEF        reduce using rule 8 (inst -> I REG COMA REG COMA IMM .)
+    R               reduce using rule 8 (inst -> I REG COMA REG COMA IMM .)
+    I               reduce using rule 8 (inst -> I REG COMA REG COMA IMM .)
+    $end            reduce using rule 8 (inst -> I REG COMA REG COMA IMM .)
+
+
+state 21
+
+    (11) inst -> I REG COMA REG COMA LABEL .
+
+    LABELDEF        reduce using rule 11 (inst -> I REG COMA REG COMA LABEL .)
+    R               reduce using rule 11 (inst -> I REG COMA REG COMA LABEL .)
+    I               reduce using rule 11 (inst -> I REG COMA REG COMA LABEL .)
+    $end            reduce using rule 11 (inst -> I REG COMA REG COMA LABEL .)
+
+
+state 22
+
+    (10) inst -> I REG COMA IMM PA REG . PC
+
+    PC              shift and go to state 23
+
+
+state 23
+
+    (10) inst -> I REG COMA IMM PA REG PC .
+
+    LABELDEF        reduce using rule 10 (inst -> I REG COMA IMM PA REG PC .)
+    R               reduce using rule 10 (inst -> I REG COMA IMM PA REG PC .)
+    I               reduce using rule 10 (inst -> I REG COMA IMM PA REG PC .)
+    $end            reduce using rule 10 (inst -> I REG COMA IMM PA REG PC .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for LABELDEF in state 6 resolved as shift
+WARNING: shift/reduce conflict for R in state 6 resolved as shift
+WARNING: shift/reduce conflict for I in state 6 resolved as shift
