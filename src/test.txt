@@ -1,0 +1,19 @@
+addi $s0, $0, 20 #n = 20
+addi $s1, $0, 4 # m = 4
+addi $s2, $0, 1 # i = 1
+add  $s3, $0, $0 # a = 0
+add  $s4, $0, $0 # b = 0
+add  $s5, $0, $0 # c = 0
+addi $s6, $0, 1 # const 1
+addi $s7, $0, 4 # const 4
+add  $t0, $0, $0 # init tmp var t0
+
+for:slt $t0, $s2, $s7 #t0 = i < 4
+beq $0, $t0, end # if i>=4, jump to end
+add $s3, $s3, $s0 #a = a + n
+sub $s3, $s3, $s2 #a = a - i
+add $s4, $s4, $s1 #b = b + m
+add $s4, $s4, $s2 #b = b + i
+add $s2, $s2, $s6 # i++
+beq $0, $0, for
+end: sub $s5, $s3, $s4 #c = a - b

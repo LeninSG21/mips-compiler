@@ -2,7 +2,7 @@
 import ply.lex as lex
 import ply.yacc as yacc
 from dictionaries import *
-
+import sys
 
 tokens = ('IMM', 'REG', 'LABELDEF', 'LABEL', 'R', 'J','I', 'O', 'COMA')
 
@@ -57,24 +57,7 @@ def t_error(t):
     # print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
-t_ignore = r'( |\t)+'
-
-texto = '''
-noop
-'''
-
-lexer = lex.lex()
-lexer.input(texto)
-
-while True:
-    tok = lexer.token()
-    # print(tok)
-    if not tok:
-        break
-
-# print(labels_def)
-
-inst_count = 1
+t_ignore = r' +'
 
 def p_exp_exp(p):
     'exp : exp exp'
@@ -192,17 +175,21 @@ def p_O(p):
     'inst : O '
     p[0] = others[p[1]]
 
-parser = yacc.yacc()
-
-result = parser.parse(texto)
+def p_error(p):
+    print("Syntax error in line %d" % (p.lineno//2))
 
 def evalT(arbol):
     if arbol==None:
         return
     if isinstance(arbol, str):
         if len(arbol)>0:
-            print("32'b"+arbol + ';') 
-            print("32'h"+hex(int(arbol,2))[2:].zfill(8).upper()+';\n\n')
+            if writeBin:
+                binStr = "32'b"+arbol + ';\n' if svFormat else arbol + '\n'
+                binF.write(binStr)
+            hexStr = hex(int(arbol,2))[2:].zfill(8).upper()
+            hexStr ="32'h"+hexStr+';\n' if svFormat else hexStr + '\n'
+            hexF.write(hexStr)
+
     elif len(arbol) == 1:
         evalT(arbol[0])
     elif len(arbol) == 2:
@@ -211,4 +198,79 @@ def evalT(arbol):
     else:
         return
 
-evalT(result)
+def printHelp():
+    print('''
+    Estoy intentando ayudar
+    ''')
+
+
+if __name__ == "__main__":
+    # texto = '''
+    # noop
+    # '''
+
+    # Flags
+    writeBin = False
+    svFormat = False
+    printText = False
+
+    # Read args
+    if len(sys.argv) <= 1:
+        print("Missing arguments!")
+        exit(0)
+    elif len(sys.argv) == 2:
+        inputFile = sys.argv[1]
+    else:
+        for i in range(1, len(sys.argv)):
+            if sys.argv[i][0] == '-':
+                if sys.argv[i] == "--help":
+                    printHelp()
+                    exit(0)
+                for j in range(1, len(sys.argv[i])):
+                    if sys.argv[i][j] == 'b':
+                        writeBin = True
+                    elif sys.argv[i][j] == 's':
+                        svFormat = True
+                    elif sys.argv[i][j] == 'p':
+                        printText = True
+            else:
+                inputFile = sys.argv[i]
+    
+    # Abrir archivo
+    
+    archivo = open(inputFile)
+    texto = archivo.read()
+
+    if printText:
+        print(texto)
+
+    # Crear archivos de escritura
+    hexF = open(inputFile.replace('txt', 'hex', 1), 'w')
+    if writeBin:
+        binF = open(inputFile.replace('txt', 'bin', 1), 'w')
+
+    lexer = lex.lex()
+    lexer.input(texto)
+
+    while True:
+        tok = lexer.token()
+        # print(tok)
+        if not tok:
+            break
+
+    # print(labels_def)
+
+    inst_count = 1
+
+    parser = yacc.yacc()
+
+    result = parser.parse(texto)
+
+    evalT(result)
+
+    hexF.close()
+
+    if writeBin:
+        binF.close()
+    
+    print("Done")
