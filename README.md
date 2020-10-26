@@ -4,6 +4,8 @@ This translator was built with [Python Lex - Yacc](https://www.dabeaz.com/ply/).
 
 ## Usage
 
+In the command line, run the file **mipsComipler.exe** as follows
+
 `mipsCompiler [OPTION] [FILE]`
 
 MIPS Compiler will take a txt file with the assembly code. By default, it will only

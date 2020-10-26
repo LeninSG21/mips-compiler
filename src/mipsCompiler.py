@@ -230,15 +230,18 @@ if __name__ == "__main__":
     # Read args
     if len(sys.argv) <= 1:
         print("Missing arguments!")
-        exit(0)
+        sys.exit(0)
     elif len(sys.argv) == 2:
+        if sys.argv[1] == "--help":
+            printHelp()
+            sys.exit(0)
         inputFile = sys.argv[1]
     else:
         for i in range(1, len(sys.argv)):
             if sys.argv[i][0] == '-':
                 if sys.argv[i] == "--help":
                     printHelp()
-                    exit(0)
+                    sys.exit(0)
                 for j in range(1, len(sys.argv[i])):
                     if sys.argv[i][j] == 'b':
                         writeBin = True
