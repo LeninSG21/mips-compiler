@@ -200,14 +200,27 @@ def evalT(arbol):
 
 def printHelp():
     print('''
-    Estoy intentando ayudar
+Usage: mipsCompiler [OPTION] [FILE]
+
+MIPS Compiler will take a txt file with the assembly code. By default, it will only
+generate a file with the same name and .hex extension, which contains the machine 
+language in hexadecimal format. With the following options, a binary file can also be
+generated, and the format can be set to System Verilog to copy and paste the code
+in a test bench (for example)
+
+    -b, creates binary file with the machine code and .bin extension
+    -s, sets the output format to System Verilog's format
+    -p, prints the teaxt read from the input file
+
+    --help, print the help information
+
+Examples:
+    mipsCompiler myFile.txt --> output file: myFile.hex
+    mipsCompiler -b myFile.txt --> output files: myFile.hex, myFile.bin
     ''')
 
 
 if __name__ == "__main__":
-    # texto = '''
-    # noop
-    # '''
 
     # Flags
     writeBin = False
