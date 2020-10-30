@@ -4,6 +4,8 @@ import ply.yacc as yacc
 from dictionaries import *
 import sys
 
+inst_count = 1
+
 tokens = ('IMM', 'REG', 'LABELDEF', 'LABEL', 'R', 'J','I', 'O', 'COMA')
 
 t_COMA = r','
