@@ -13,7 +13,7 @@ After doing that, you can use the mipsCompiler script.
 ### Execution
 In the command line, run the file **mipsComipler.py** as follows
 
-`python3 mipsCompiler [OPTION] [FILE]`
+`python3 mipsCompiler.py [OPTION] [FILE]`
 
 MIPS Compiler will take a txt file with the assembly code. By default, it will only
 generate a file with the same name and .hex extension, which contains the machine
