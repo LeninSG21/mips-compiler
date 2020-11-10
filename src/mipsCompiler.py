@@ -6,7 +6,7 @@ import sys
 
 inst_count = 1
 
-tokens = ('IMM', 'REG', 'LABELDEF', 'LABEL', 'R', 'J','I', 'O', 'COMA')
+tokens = ('IMM', 'REG', 'LABELDEF', 'LABEL', 'R', 'J', 'I', 'O', 'COMA')
 
 t_COMA = r','
 
@@ -28,13 +28,14 @@ def t_REG(t):
     t.value = getRegisterAddress(t.value[1:])
     return t
 
+
 def t_MNEMONIC(t):
     r'[a-zA-Z]+'
     if t.value in r_type:
         t.type = 'R'
     elif t.value in i_type:
         t.type = 'I'
-    elif t.value  in j_type:
+    elif t.value in j_type:
         t.type = 'J'
     elif t.value in others.keys():
         t.type = 'O'
@@ -42,51 +43,64 @@ def t_MNEMONIC(t):
         t.type = 'LABEL'
     return t
 
+
 def t_IMM(t):
     r'-?\d+'
     t.value = int(t.value)
     return t
 
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += 1
+
 
 def t_COMMENT(t):
     r'\#.*'
     pass
 
+
 def t_error(t):
     # print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
+
 t_ignore = r' +'
+
 
 def p_exp_exp(p):
     'exp : exp exp'
     p[0] = (p[1], p[2])
 
+
 def p_exp(p):
     'exp : inst '
     p[0] = p[1]
 
+
 def p_exp_label(p):
     'exp : LABELDEF inst '
     p[0] = p[2]
+
 
 def p_R1(p):
     'inst : R REG COMA REG COMA REG'
     global inst_count
     inst_count += 1
     if(p[1] == 'sllv' or p[1] == 'srlv'):
-        p[0] = "%s%s%s%s00000%s" % (opcodes[p[1]], p[6], p[4], p[2],func[p[1]])
+        p[0] = "%s%s%s%s00000%s" % (
+            opcodes[p[1]], p[6], p[4], p[2], func[p[1]])
     else:
-        p[0] = "%s%s%s%s00000%s" % (opcodes[p[1]], p[4], p[6], p[2],func[p[1]])
+        p[0] = "%s%s%s%s00000%s" % (
+            opcodes[p[1]], p[4], p[6], p[2], func[p[1]])
+
 
 def p_R2(p):
     'inst : R REG COMA REG'
     global inst_count
     inst_count += 1
     p[0] = "%s%s%s0000000000%s" % (opcodes[p[1]], p[2], p[4], func[p[1]])
+
 
 def p_R3(p):
     'inst : R REG'
@@ -95,13 +109,15 @@ def p_R3(p):
     if(p[1] == 'jr'):
         p[0] = "%s%s000000000000000%s" % (opcodes[p[1]], p[2], func[p[1]])
     elif(p[1] == 'mfhi' or p[1] == 'mflo'):
-        p[0] = "%s0000000000%s00000%s" %(opcodes[p[1]], p[2], func[p[1]])
+        p[0] = "%s0000000000%s00000%s" % (opcodes[p[1]], p[2], func[p[1]])
+
 
 def p_Rshift(p):
     'inst : R REG COMA REG COMA IMM'
     global inst_count
     inst_count += 1
-    p[0] = "%s00000%s%s%s%s" %(opcodes[p[1]], p[4], p[2], num2bin(abs(p[6]), 5), func[p[1]])
+    p[0] = "%s00000%s%s%s%s" % (
+        opcodes[p[1]], p[4], p[2], num2bin(abs(p[6]), 5), func[p[1]])
 
 
 def p_I1(p):
@@ -109,24 +125,30 @@ def p_I1(p):
     global inst_count
     inst_count += 1
     if p[1] == 'beq' or p[0] == 'bne':
-        p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], p[4], num2bin_signed(p[6], 16))
+        p[0] = "%s%s%s%s" % (opcodes[p[1]], p[2], p[4],
+                             num2bin_signed(p[6], 16))
     else:
-        p[0] = "%s%s%s%s" % (opcodes[p[1]], p[4], p[2], num2bin_signed(p[6], 16))
+        p[0] = "%s%s%s%s" % (opcodes[p[1]], p[4], p[2],
+                             num2bin_signed(p[6], 16))
+
 
 def p_I2(p):
     'inst : I REG COMA IMM'
     global inst_count
     inst_count += 1
-    if p[1] =='lui':
-         p[0]  = "%s00000%s%s" % (opcodes[p[1]], p[2], num2bin_signed(p[4], 16))
+    if p[1] == 'lui':
+        p[0] = "%s00000%s%s" % (opcodes[p[1]], p[2], num2bin_signed(p[4], 16))
     else:
-        p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], branches[p[1]], num2bin_signed(p[4], 16))
+        p[0] = "%s%s%s%s" % (opcodes[p[1]], p[2],
+                             branches[p[1]], num2bin_signed(p[4], 16))
+
 
 def p_I3(p):
     'inst : I REG COMA IMM  REG '
     global inst_count
     inst_count += 1
     p[0] = "%s%s%s%s" % (opcodes[p[1]], p[5], p[2], num2bin(p[4], 16))
+
 
 def p_I1Label(p):
     'inst : I REG COMA REG COMA LABEL'
@@ -139,57 +161,65 @@ def p_I1Label(p):
         else:
             offset = num2bin_signed(labelDefLine - 1 - inst_count, 16)
         if p[1] == 'beq' or p[0] == 'bne':
-            p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], p[4], offset)
+            p[0] = "%s%s%s%s" % (opcodes[p[1]], p[2], p[4], offset)
         else:
             p[0] = "%s no puede tener %s como entrada" % (p[1], p[6])
-    else: 
+    else:
         print("No existe el label!")
         p[0] = "LABEL NO DEFINIDO"
-    
+
     inst_count += 1
-    
+
 
 def p_I2Label(p):
     'inst : I REG COMA LABEL'
     global inst_count
-    
+
     if p[4] in labels_def.keys():
         labelDefLine = labels_def[p[4]]
         if labelDefLine > inst_count:
             offset = num2bin(labelDefLine - inst_count - 1, 16)
         else:
             offset = num2bin_signed(labelDefLine - 1 - inst_count, 16)
-        if p[1] !='lui':
-            p[0]  = "%s%s%s%s" % (opcodes[p[1]], p[2], branches[p[1]], offset)
+        if p[1] != 'lui':
+            p[0] = "%s%s%s%s" % (opcodes[p[1]], p[2], branches[p[1]], offset)
         else:
             p[0] = "%s no puede tener %s como entrada" % (p[1], p[6])
-    else: 
+    else:
         print("No existe el label!")
         p[0] = "LABEL NO DEFINIDO"
-    
+
     inst_count += 1
+
 
 def p_J(p):
     'inst : J IMM'
+    global inst_count
     p[0] = "%s%s" % (opcodes[p[1]], num2bin_signed(p[2], 26))
+    inst_count += 1
+
 
 def p_O(p):
     'inst : O '
+    global inst_count
     p[0] = others[p[1]]
+    inst_count += 1
+
 
 def p_error(p):
     print("Syntax error in line %d" % (p.lineno//2))
 
+
 def evalT(arbol):
-    if arbol==None:
+    if arbol == None:
         return
     if isinstance(arbol, str):
-        if len(arbol)>0:
+        if len(arbol) > 0:
             if writeBin:
                 binStr = "32'b"+arbol + ';\n' if svFormat else arbol + '\n'
                 binF.write(binStr)
-            hexStr = hex(int(arbol,2))[2:].zfill(8).upper()
-            hexStr ="32'h"+hexStr+';\n' if svFormat else hexStr + '\n'
+            hexStr = hex(int(arbol, 2))[2:].zfill(8).upper()
+            hexStr = "32'h"+hexStr+';\n' if svFormat else hexStr + '\n'
             hexF.write(hexStr)
 
     elif len(arbol) == 1:
@@ -199,6 +229,7 @@ def evalT(arbol):
         evalT(arbol[1])
     else:
         return
+
 
 def printHelp():
     print('''
@@ -253,9 +284,9 @@ if __name__ == "__main__":
                         printText = True
             else:
                 inputFile = sys.argv[i]
-    
+
     # Abrir archivo
-    
+
     archivo = open(inputFile)
     texto = archivo.read()
 
@@ -290,5 +321,5 @@ if __name__ == "__main__":
 
     if writeBin:
         binF.close()
-    
+
     print("Done")

@@ -1,0 +1,18 @@
+noop
+add $s0, $0, $0 # s0 = 0 --> var 1
+addi $s1, $0, 1 # s1 = 1 --> var 2
+lw $s7, 15($0) # s7 = D[15] = 15 --> fibonnacci hasta 15
+addi $s6, $0, 1 # s6 = 1 -> constante de suma
+add $t7, $0, $0 #t7 = 0 --> contador
+for:slt $t0, $t7, $s7
+beq $0, $t0, end
+add $s2, $s0, $s1 # s2 = s0 + s1
+sw $s1, 1($0) # D[1] = s1
+sw $s2, 2($0) # D[2] = s2
+lw $s0, 1($0) # s0 = D[1]
+lw $s1, 2($0) # s1 = D[2]
+add $t7, $t7, $s6 # t7++
+beq $0, $0, for
+end: sub $s0, $s1, $s0 # s0 = s1 - s0
+sw $s0, 0($0) # D[0] = s0
+loop:beq $0,$0, loop #loop infinito
